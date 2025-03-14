@@ -44,14 +44,14 @@ struct ContentView: View {
                         .foregroundColor(.blue)
                 })
                 .sheet(isPresented: $showAddContactSheet) {
-                    AddContactView(contacts: $contacts, showAddContactSheet: $showAddContactSheet)
+                    AddScreenCover(contacts: $contacts, showAddContactSheet: $showAddContactSheet)
                 }
             }
         }
     }
 }
 
-struct AddContactView: View {
+struct AddScreenCover: View {
     
     @Binding var contacts: [(name: String, phone: String, email: String)]
     
@@ -113,15 +113,12 @@ struct AddContactView: View {
         
         if name.isEmpty || phone.isEmpty || email.isEmpty {
             generalError = true
-            print("Todos os campos precisam ser preenchidos.")
         } else {
             if phone.count != 9 {
                 phoneError = true
-                print("Telefone Inválido.")
             }
             if !email.contains("@") {
                 emailError = true
-                print("E-mail Inválido.")
             }
             if !phoneError && !emailError && !generalError {
                 contacts.append((name: name, phone: phone, email: email))
