@@ -8,18 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    @State var contacts: [(name: String, phone: String, email: String)] = []
+    @StateObject var viewModel = ContactViewModel()
     @State var showAddContactSheet = false
-    
+    @State private var selectedContact: Contact? = nil
+
     var body: some View {
         NavigationView {
             VStack {
-                List(contacts, id: \.phone) { contact in
-                    ContactRow(contact: contact)
+                List(viewModel.contacts, id: \.id) { contact in
+                    Button(action: {
+                        selectedContact = contact
+                        showAddContactSheet.toggle()
+                    }) {
+                        ContactRow(contact: contact)
+                    }
                 }
                 .navigationTitle("Lista de Contatos")
                 .navigationBarItems(trailing: Button(action: {
+                    selectedContact = nil
                     showAddContactSheet.toggle()
                 }) {
                     Image(systemName: "plus.circle.fill")
@@ -27,7 +33,12 @@ struct ContentView: View {
                         .foregroundColor(.blue)
                 })
                 .sheet(isPresented: $showAddContactSheet) {
-                    AddContactForm(contacts: $contacts, showAddContactSheet: $showAddContactSheet)
+                    AddContactForm(
+                        contacts: $viewModel.contacts,
+                        showAddContactSheet: $showAddContactSheet,
+                        viewModel: viewModel,
+                        selectContact: selectedContact
+                    )
                 }
             }
         }

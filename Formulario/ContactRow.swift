@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ContactRow: View {
-    var contact: (name: String, phone: String, email: String)
-    
+    var contact: Contact
+
     var body: some View {
         VStack(alignment: .leading) {
             Text(contact.name)
@@ -26,6 +26,6 @@ struct ContactRow: View {
 
 struct ContactRow_Previews: PreviewProvider {
     static var previews: some View {
-        ContactRow(contact: (name: "Marcelo Rosa", phone: "123456789", email: "marcelo@gmail.com"))
+        ContactRow(contact: Contact(name: "Marcelo Rosa", phone: "123456789", email: "marcelo@gmail.com"))
     }
 }
