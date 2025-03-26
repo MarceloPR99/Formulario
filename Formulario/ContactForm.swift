@@ -15,12 +15,14 @@ struct AddContactForm: View {
     
     var selectContact: Contact?
     
-    @State private var name = ""
-    @State private var phone = ""
-    @State private var email = ""
-    @State private var phoneError = false
-    @State private var emailError = false
-    @State private var generalError = false
+    @State var name = ""
+    @State var phone = ""
+    @State var email = ""
+    @State var cpf = ""
+    @State var phoneError = false
+    @State var emailError = false
+    @State var generalError = false
+    @State var cpfError = false
 
     var body: some View {
         NavigationView {
@@ -34,6 +36,10 @@ struct AddContactForm: View {
                     CustomTextField(title: "E-mail", text: $email, keyboardType: .emailAddress)
                     if emailError {
                         ErrorMessage(message: "O e-mail deve conter um '@'.")
+                    }
+                    CustomTextField(title: "CPF", text: $cpf)
+                    if cpfError {
+                        ErrorMessage(message: "O CPF é invalido.")
                     }
                     if generalError {
                         ErrorMessage(message: "Todos os campos precisam ser preenchidos.")
@@ -57,6 +63,7 @@ struct AddContactForm: View {
                     name = contact.name
                     phone = contact.phone
                     email = contact.email
+                    cpf = contact.cpf
                 }
             }
             .navigationBarItems(leading: Button("Fechar") {
@@ -70,7 +77,7 @@ struct AddContactForm: View {
         emailError = false
         generalError = false
 
-        if name.isEmpty || phone.isEmpty || email.isEmpty {
+        if name.isEmpty || phone.isEmpty || email.isEmpty || cpf.isEmpty{
             generalError = true
             return
         }
@@ -84,8 +91,13 @@ struct AddContactForm: View {
             emailError = true
             return
         }
+        
+        if !isValidCPF(cpf) {
+            cpfError = true
+            return
+        }
 
-        let newContact = Contact(name: name, phone: phone, email: email)
+        let newContact = Contact(name: name, phone: phone, email: email, cpf: cpf)
 
         if let contact = selectContact {
             if let index = viewModel.contacts.firstIndex(where: { $0.id == contact.id }) {
@@ -98,9 +110,14 @@ struct AddContactForm: View {
         name = ""
         phone = ""
         email = ""
+        cpf = ""
 
         showAddContactSheet = false
     }
+}
+
+func isValidCPF(_ cpf: String) -> Bool {
+    return cpf.count == 11 && !cpf.contains(" ") && !cpf.contains("-")
 }
 
 struct AddContactForm_Previews: PreviewProvider {

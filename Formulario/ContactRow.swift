@@ -19,6 +19,9 @@ struct ContactRow: View {
             Text(contact.email)
                 .font(.subheadline)
                 .foregroundColor(.gray)
+            Text(contact.cpf)
+                .font(.subheadline)
+                .foregroundColor(.gray)
         }
         .padding()
     }
@@ -26,6 +29,6 @@ struct ContactRow: View {
 
 struct ContactRow_Previews: PreviewProvider {
     static var previews: some View {
-        ContactRow(contact: Contact(name: "Marcelo Rosa", phone: "123456789", email: "marcelo@gmail.com"))
+        ContactRow(contact: Contact(name: "Marcelo Rosa", phone: "123456789", email: "marcelo@gmail.com", cpf: "123.456.789-00"))
     }
 }
