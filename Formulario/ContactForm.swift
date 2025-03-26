@@ -92,6 +92,8 @@ struct AddContactForm: View {
             return
         }
         
+        cpf = formatCPF(cpf)
+        
         if !isValidCPF(cpf) {
             cpfError = true
             return
@@ -116,8 +118,24 @@ struct AddContactForm: View {
     }
 }
 
+func formatCPF(_ cpf: String) -> String {
+    let cleanedCPF = cpf.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+    
+    if cleanedCPF.count != 11 {
+        return cpf
+    }
+    
+    let firstPart = cleanedCPF.prefix(3)
+    let secondPart = cleanedCPF.dropFirst(3).prefix(3)
+    let thirdPart = cleanedCPF.dropFirst(6).prefix(3)
+    let fourthPart = cleanedCPF.dropFirst(9).prefix(2)
+    
+    return "\(firstPart).\(secondPart).\(thirdPart)-\(fourthPart)"
+}
+
+
 func isValidCPF(_ cpf: String) -> Bool {
-    return cpf.count == 11 && !cpf.contains(" ") && !cpf.contains("-")
+    return cpf.count == 14
 }
 
 struct AddContactForm_Previews: PreviewProvider {
