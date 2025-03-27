@@ -10,12 +10,31 @@ import SwiftUI
 struct ContentView: View {
     @StateObject var viewModel = ContactViewModel()
     @State var showAddContactSheet = false
-    @State private var selectedContact: Contact? = nil
-
+    @State var selectedContact: Contact? = nil
+    @State var searchText = ""
+    @State var filteredContacts: [Contact] = []
+    
     var body: some View {
         NavigationView {
             VStack {
-                List(viewModel.contacts, id: \.id) { contact in
+                TextField("Pesquisar Contato", text: $searchText)
+                    .padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+                
+                Button(action: {
+                    filterContacts()
+                }) {
+                    Text("Pesquisar")
+                        .padding()
+                        .frame(width: 350, height: 35)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal)
+                
+                List(filteredContacts.isEmpty ? viewModel.contacts : filteredContacts, id: \.id) { contact in
                     Button(action: {
                         selectedContact = contact
                         showAddContactSheet.toggle()
@@ -40,6 +59,24 @@ struct ContentView: View {
                         selectContact: selectedContact
                     )
                 }
+            }
+            .onAppear {
+                filteredContacts = viewModel.contacts
+            }
+        }
+    }
+
+    
+    func filterContacts() {
+        if searchText.isEmpty {
+            filteredContacts = viewModel.contacts
+        }
+        else{
+            filteredContacts = viewModel.contacts.filter { contact in
+                contact.name.lowercased().contains(searchText.lowercased()) ||
+                contact.phone.contains(searchText) ||
+                contact.email.lowercased().contains(searchText.lowercased()) ||
+                contact.cpf.contains(searchText)
             }
         }
     }
