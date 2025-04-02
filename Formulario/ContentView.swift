@@ -56,7 +56,7 @@ struct ContentView: View {
                         contacts: $viewModel.contacts,
                         showAddContactSheet: $showAddContactSheet,
                         viewModel: viewModel,
-                        selectContact: selectedContact
+                        selectContact: selectedContact, showCloseButton: true
                     )
                 }
             }
